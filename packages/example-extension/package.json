@@ -1,0 +1,15 @@
+{
+  "name": "mv3-proxy-kit-example-extension",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/background.ts --bundle --outfile=dist/background.js --format=esm && esbuild src/popup.ts --bundle --outfile=dist/popup.js --format=esm"
+  },
+  "dependencies": {
+    "@infralayers/mv3-proxy-kit": "*"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}
