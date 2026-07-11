@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "mv3-proxy-kit example",
+  "version": "0.1.0",
+  "permissions": ["proxy", "webRequest", "webRequestBlocking", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "scripts": ["dist/background.js"], "type": "module" },
+  "action": { "default_popup": "src/popup.html" },
+  "browser_specific_settings": {
+    "gecko": { "id": "example@infralayers.net" }
+  }
+}
