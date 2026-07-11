@@ -1,3 +1,5 @@
+[![CI](https://github.com/infralayers/mv3-proxy-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/infralayers/mv3-proxy-kit/actions/workflows/ci.yml)
+
 # mv3-proxy-kit
 
 Open-source toolkit for building reliable Manifest V3 proxy/VPN browser extensions.
