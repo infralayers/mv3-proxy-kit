@@ -19,11 +19,7 @@ unpacked extension in `chrome://extensions` and `about:debugging`, and confirmin
 auth + config switching actually work end-to-end) is the one remaining step and needs a
 real browser** — see `packages/example-extension/README.md` for how to do that.
 
-Known gap: Firefox's MV3 `webRequest` auth-callback shape (`webRequestBlocking` +
-synchronous return) differs from Chrome's (`webRequestAuthProvider` + `asyncBlocking`).
-`registerProxyAuth` currently targets Chrome's async callback shape; PAC-based config
-switching works on both browsers, but full Firefox auth-callback parity is a follow-up,
-not yet implemented.
+Known gap: While cross-browser proxy auth (`registerProxyAuth`) is fully implemented and tested for both Chrome and Firefox MV3, manual end-to-end verification in Firefox is currently blocked. Firefox ignores `pacScript.data` in `proxy.settings.set`, meaning the PAC-based config silently fails to route traffic in Firefox. A native Firefox proxy configuration approach (e.g., `proxyType: "manual"`) must be implemented before Firefox proxy auth can be manually triggered in the browser.
 
 ## Development
 
