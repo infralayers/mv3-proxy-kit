@@ -1,4 +1,4 @@
-import { getBrowserAPI, type BrowserAPI } from "./browserApi.js";
+import { getBrowserAPI, isFirefox, type BrowserAPI } from "./browserApi.js";
 
 export interface ProxyTarget {
   host: string;
@@ -13,11 +13,23 @@ export async function setProxyConfig(
   target: ProxyTarget,
   api: BrowserAPI = getBrowserAPI()
 ): Promise<void> {
-  await api.proxy.settings.set({
-    value: {
-      mode: "pac_script",
-      pacScript: { data: buildPacScript(target) },
-    },
-    scope: "regular",
-  });
+  if (isFirefox()) {
+    await api.proxy.settings.set({
+      value: {
+        proxyType: "manual",
+        http: `${target.host}:${target.port}`,
+        ssl: `${target.host}:${target.port}`,
+        httpProxyAll: true
+      },
+      scope: "regular",
+    });
+  } else {
+    await api.proxy.settings.set({
+      value: {
+        mode: "pac_script",
+        pacScript: { data: buildPacScript(target) },
+      },
+      scope: "regular",
+    });
+  }
 }

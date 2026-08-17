@@ -11,7 +11,7 @@ describe("buildPacScript", () => {
 });
 
 describe("setProxyConfig", () => {
-  it("calls proxy.settings.set with a pac_script config", async () => {
+  it("calls proxy.settings.set with a pac_script config in Chrome", async () => {
     const set = vi.fn().mockResolvedValue(undefined);
     const api = { proxy: { settings: { set } } } as unknown as BrowserAPI;
     const target = { host: "proxy.infralayers.net", port: 8080 };
@@ -25,5 +25,36 @@ describe("setProxyConfig", () => {
       },
       scope: "regular",
     });
+  });
+
+  it("calls proxy.settings.set with proxyType manual in Firefox", async () => {
+    const originalUserAgent = navigator.userAgent;
+    Object.defineProperty(navigator, 'userAgent', {
+      value: "Mozilla/5.0 Firefox/114.0",
+      configurable: true
+    });
+
+    try {
+      const set = vi.fn().mockResolvedValue(undefined);
+      const api = { proxy: { settings: { set } } } as unknown as BrowserAPI;
+      const target = { host: "proxy.infralayers.net", port: 8080 };
+
+      await setProxyConfig(target, api);
+
+      expect(set).toHaveBeenCalledWith({
+        value: {
+          proxyType: "manual",
+          http: "proxy.infralayers.net:8080",
+          ssl: "proxy.infralayers.net:8080",
+          httpProxyAll: true
+        },
+        scope: "regular",
+      });
+    } finally {
+      Object.defineProperty(navigator, 'userAgent', {
+        value: originalUserAgent,
+        configurable: true
+      });
+    }
   });
 });
