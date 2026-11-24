@@ -21,7 +21,7 @@ A clear and concise description of what you expected to happen.
 **Browser and Environment:**
  - **Primary Browser & Version:** [e.g. Chrome 120]
  - **Cross-Browser Test:** Did you test this in another browser (e.g., Firefox)? If so, does the issue occur there too, or is it specific to one browser? [e.g. Yes, works perfectly in Firefox, but breaks in Chrome]
- - **`mv3-proxy-kit` version:** [e.g. 1.0.0]
+ - **`mv3-proxy-kit` version:** [e.g. 0.1.0]
 
 **Additional context**
 Add any other context about the problem here (e.g. logs from the background service worker, manifest permissions).

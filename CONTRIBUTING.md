@@ -3,7 +3,7 @@
 Thank you for your interest in contributing to `mv3-proxy-kit`! We are building the most reliable, cross-browser proxy and VPN toolkit for Manifest V3 extensions, and we are thrilled you are here to help us improve.
 
 ## Code of Conduct
-By participating in this project, you agree to abide by our [Code of Conduct](./CODE_OF_CONDUCT.md). We expect all contributors to maintain a professional and welcoming environment for everyone.
+We expect all contributors to maintain a professional, respectful, and welcoming environment for everyone participating in this project.
 
 ## Reporting Bugs
 If you find a bug, please use our **Bug Report Template** when opening an issue. A good bug report includes:
@@ -16,7 +16,7 @@ If you find a bug, please use our **Bug Report Template** when opening an issue.
 We welcome new ideas! Before writing any code, please open a discussion or issue using our **Feature Request Template**. This allows the maintainers to discuss the architectural implications and ensure your proposed solution aligns with the project's roadmap before you invest time in coding.
 
 ## Environment Setup
-To get started locally, you will need Node.js (v18+) installed. Clone the repository and install all workspace dependencies:
+To get started locally, you will need Node.js (v20+) installed. Clone the repository and install all workspace dependencies:
 
 ```bash
 git clone https://github.com/infralayers/mv3-proxy-kit.git
@@ -52,13 +52,12 @@ All new code must include accompanying test coverage.
 We use `vitest`. Because Chrome and Firefox mock APIs vary wildly, ensure your code handles both synchronous and asynchronous callback behaviors if interacting with browser APIs.
 ```bash
 npm test              # Run tests once
-npm run test:watch    # Watch mode
 ```
 
 ### 2. Cross-Browser Manual Verification
 If you are modifying core proxy or authentication logic, **you must manually verify your changes in real browsers** using the example extension.
 
-1. Build both packages: 
+1. Build both packages:
    ```bash
    npm run build --workspace=packages/core
    npm run build --workspace=packages/example-extension
