@@ -19,8 +19,8 @@ export interface BrowserAPI {
       addListener: (
         callback: (
           details: WebAuthDetails,
-          asyncCallback: (response: AuthCallbackResponse) => void
-        ) => void,
+          asyncCallback?: (response: AuthCallbackResponse) => void
+        ) => AuthCallbackResponse | Promise<AuthCallbackResponse> | void,
         filter: { urls: string[] },
         extraInfoSpec: string[]
       ) => void;
@@ -51,9 +51,20 @@ export interface BrowserAPI {
 
 export function getBrowserAPI(): BrowserAPI {
   const g = globalThis as unknown as { chrome?: BrowserAPI; browser?: BrowserAPI };
-  if (g.chrome) return g.chrome;
-  if (g.browser) return g.browser;
+  if (isFirefox() && g.browser) {
+    return g.browser;
+  }
+  if (g.chrome) {
+    return g.chrome;
+  }
+  if (g.browser) {
+    return g.browser;
+  }
   throw new Error(
     "mv3-proxy-kit: no chrome or browser global found. This code must run inside a browser extension context."
   );
+}
+
+export function isFirefox(): boolean {
+  return typeof navigator !== 'undefined' && navigator.userAgent.includes('Firefox');
 }
