@@ -1,6 +1,6 @@
 [![CI](https://github.com/infralayers/mv3-proxy-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/infralayers/mv3-proxy-kit/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/@infralayers/mv3-proxy-kit.svg)](https://www.npmjs.com/package/@infralayers/mv3-proxy-kit)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/infralayers/mv3-proxy-kit/blob/main/LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6.svg)](https://www.typescriptlang.org/)
 
 # @infralayers/mv3-proxy-kit
@@ -31,32 +31,27 @@ import {
   clearProxyConfig,
 } from "@infralayers/mv3-proxy-kit";
 
-// 1. Store credentials in suspension-safe MV3 state (auto-hydrates on cold restart)
+// Register synchronously at the top level of your MV3 service worker (no top-level await)
 const credentials = createPersistedState<{ username: string; password: string }>("proxyCreds");
-
-// 2. Register cross-browser proxy authentication (Chrome asyncBlocking + Firefox blocking Promise)
-//    Always register synchronously at the top level of your MV3 service worker!
 registerProxyAuth(async () => credentials.get());
 
-// 3. Configure proxy routing (Declarative fixed_servers mode — works on Chrome & Firefox)
-await credentials.set({ username: "alice", password: "secret" });
-await setProxyConfig({
-  mode: "fixed_servers",
-  rules: {
-    singleProxy: { host: "proxy.example.com", port: 8080, scheme: "http" },
-    bypassList: ["localhost", "127.0.0.1"],
-  },
-});
+// Invoke from your popup/message handler or auth flow
+async function enableProxy(host: string, port: number, username: string, password: string) {
+  await credentials.set({ username, password });
+  await setProxyConfig({
+    mode: "fixed_servers",
+    rules: { singleProxy: { host, port, scheme: "http" }, bypassList: ["localhost"] },
+  });
+  // Or use a PAC URL (from UI or API): await setProxyConfig({ mode: "pac_url", url: pacUrl });
+}
 
-// Or use a hosted PAC script URL:
-await setProxyConfig({
-  mode: "pac_url",
-  url: "https://example.com/proxy.pac",
-});
-
-// 4. Revert to a direct connection
-await clearProxyConfig();
+async function disableProxy() {
+  await clearProxyConfig();
+}
 ```
+
+- **Full Module-by-Module Developer Guide:** [docs/GUIDE.md](https://github.com/infralayers/mv3-proxy-kit/blob/main/docs/GUIDE.md)
+- **Working Chrome & Firefox Reference Extension:** [packages/example-extension](https://github.com/infralayers/mv3-proxy-kit/tree/main/packages/example-extension)
 
 ---
 
@@ -94,16 +89,14 @@ import { setProxyConfig, registerProxyAuth } from "@infralayers/mv3-proxy-kit/pr
 | **Direct (`direct` / `clearProxyConfig`)** | `mode: "direct"` | `proxyType: "none"` |
 | **Persisted State (`createPersistedState`)** | `chrome.storage.session` | `browser.storage.session` (fallback to `local`) |
 
-### Important Browser Notes
-* **Chrome `chrome://newtab` quirk:** Chrome blocks extensions from intercepting `onAuthRequired` on privileged `chrome://` pages. Navigating to any standard `https://` page triggers `registerProxyAuth` and populates Chrome's HTTP Auth Cache.
-* **Firefox Private Browsing & Host Permissions:** Firefox requires **"Run in Private Windows: Allow"** (in `about:addons`) for `browser.proxy.settings.set()` and requires `<all_urls>` host permission to be enabled for `onAuthRequired`.
+See the [full Developer Guide](https://github.com/infralayers/mv3-proxy-kit/blob/main/docs/GUIDE.md) for manifest permissions, Chrome/Firefox quirks, and complete API documentation.
 
 ---
 
 ## Monorepo Packages
 
-- [`packages/core`](packages/core) — `@infralayers/mv3-proxy-kit` (published to npm)
-- [`packages/example-extension`](packages/example-extension) — Working Chrome + Firefox reference extension demonstrating `fixed_servers`, `pac_url`, `clearProxyConfig`, `registerProxyAuth`, and `createPersistedState` (private, not published to npm)
+- [packages/core](https://github.com/infralayers/mv3-proxy-kit/tree/main/packages/core) — `@infralayers/mv3-proxy-kit` (published to npm)
+- [packages/example-extension](https://github.com/infralayers/mv3-proxy-kit/tree/main/packages/example-extension) — Working Chrome + Firefox reference extension (private, not published to npm)
 
 ---
 
@@ -117,7 +110,7 @@ npm run build --workspace=packages/core
 npm run build --workspace=packages/example-extension
 ```
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on local browser testing and pull requests.
+See [CONTRIBUTING.md](https://github.com/infralayers/mv3-proxy-kit/blob/main/CONTRIBUTING.md) for guidelines on local browser testing and pull requests.
 
 ---
 
