@@ -18,15 +18,15 @@ function createFakeApi() {
 }
 
 describe("createPersistedState", () => {
-  it("returns undefined before hydration", () => {
+  it("lazily hydrates on the first read", async () => {
     const state = createPersistedState<string>("proxyMode", createFakeApi());
-    expect(state.get()).toBeUndefined();
+    await expect(state.get()).resolves.toBeUndefined();
   });
 
   it("set() updates the in-memory cache immediately", async () => {
     const state = createPersistedState<string>("proxyMode", createFakeApi());
     await state.set("manual");
-    expect(state.get()).toBe("manual");
+    await expect(state.get()).resolves.toBe("manual");
   });
 
   it("hydrate() reads a value persisted by a previous service-worker instance", async () => {
@@ -35,8 +35,6 @@ describe("createPersistedState", () => {
     await first.set("pac");
 
     const second = createPersistedState<string>("proxyMode", api);
-    expect(second.get()).toBeUndefined();
-    await second.hydrate();
-    expect(second.get()).toBe("pac");
+    await expect(second.get()).resolves.toBe("pac");
   });
 });
