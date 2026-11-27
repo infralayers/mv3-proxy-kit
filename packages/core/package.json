@@ -1,13 +1,65 @@
 {
   "name": "@infralayers/mv3-proxy-kit",
   "version": "0.1.0",
-  "description": "Toolkit for building reliable Manifest V3 proxy/VPN browser extensions",
+  "description": "Zero-dependency TypeScript toolkit for reliable Manifest V3 (MV3) Chrome & Firefox extensions — cross-browser proxy/VPN routing & auth, suspension-safe state, and typed messaging",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./state": {
+      "types": "./dist/serviceWorkerState.d.ts",
+      "import": "./dist/serviceWorkerState.js"
+    },
+    "./messaging": {
+      "types": "./dist/messaging.d.ts",
+      "import": "./dist/messaging.js"
+    },
+    "./proxy": {
+      "types": "./dist/proxy.d.ts",
+      "import": "./dist/proxy.js"
+    }
+  },
   "license": "MIT",
-  "files": ["dist"],
+  "author": "InfraLayers <support@infralayers.net> (https://infralayers.net)",
+  "homepage": "https://github.com/infralayers/mv3-proxy-kit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infralayers/mv3-proxy-kit.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/infralayers/mv3-proxy-kit/issues"
+  },
+  "keywords": [
+    "mv3",
+    "manifest-v3",
+    "chrome-extension",
+    "firefox-extension",
+    "webextension",
+    "proxy",
+    "vpn",
+    "proxy-auth",
+    "onAuthRequired",
+    "pac",
+    "socks5",
+    "service-worker",
+    "typescript"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "prepack": "npm run build && cp ../../README.md ./README.md && cp ../../LICENSE ./LICENSE",
+    "postpack": "rm -f ./README.md ./LICENSE"
   }
 }

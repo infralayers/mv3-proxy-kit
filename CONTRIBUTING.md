@@ -26,8 +26,8 @@ npm install
 
 ## Architecture Overview
 This project is structured as an npm workspace (monorepo) to separate the library from its testing tools:
-- `packages/core/`: The actual `mv3-proxy-kit` library codebase. All core proxy logic, state management, and authentication code resides here.
-- `packages/example-extension/`: A fully functional browser extension built using the core library. This is heavily used for manual cross-browser verification.
+- `packages/core/`: The actual `@infralayers/mv3-proxy-kit` library codebase, published publicly to npm. Please keep public TypeScript exports backwards-compatible and avoid unnecessary runtime dependencies.
+- `packages/example-extension/`: A private reference browser extension built using the core library (not published to npm). Used for manual cross-browser verification in Chrome and Firefox.
 
 ## Coding Standards
 We enforce strict typing and formatting standards to ensure enterprise-grade code quality:
@@ -41,7 +41,7 @@ Please create a new branch for your work. We follow standard branch naming conve
 - `docs/your-doc-update` (For documentation changes)
 
 ## Commit Guidelines
-We strictly enforce the [Conventional Commits](https://www.conventionalcommits.org/) specification for all commit messages. This helps us auto-generate changelogs.
+We strictly enforce the [Conventional Commits](https://www.conventionalcommits.org/) specification for all commit messages, which maps directly to our Semantic Versioning releases (`fix:` → patch `0.1.x`, `feat:` → minor `0.x.0`, `BREAKING CHANGE:` → major):
 - Example: `feat: add support for declarative proxy whitelists`
 - Example: `fix: resolve pacScript injection bug in Firefox`
 
