@@ -186,6 +186,7 @@ async function saveAndRead(settings: ProxySettings) {
 
 ```ts
 import { createChannel } from "@infralayers/mv3-proxy-kit/messaging";
+import { setProxyConfig } from "@infralayers/mv3-proxy-kit/proxy";
 
 interface EnablePayload {
   host: string;
@@ -237,6 +238,8 @@ await setProxyConfig({ mode: "direct" }, fakeApi);
 ---
 
 ## Manifest Permissions & Browser Quirks
+
+**Non-proxy extensions:** If you only use `@infralayers/mv3-proxy-kit/state`, you only need the `"storage"` permission. `@infralayers/mv3-proxy-kit/messaging` requires no extra manifest permissions. The permissions below apply when using the `/proxy` module.
 
 ### Chrome MV3 (`manifest.json`)
 
